@@ -3,7 +3,7 @@ package config
 import (
 	"errors"
 
-	"github.com/shakahl/graphql-typedef-go/internal/utils"
+	"github.com/shakahl/gqlassist/internal/utils"
 )
 
 const (

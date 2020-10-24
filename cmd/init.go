@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/shakahl/graphql-typedef-go/internal/config"
+	"github.com/shakahl/gqlassist/internal/config"
 )
 
 // initCmd represents the "generate" command

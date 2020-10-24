@@ -36,19 +36,19 @@ const (
 	BuildPlatform = "-"
 
 	// RepositoryUrl is an url to a GitHub repository
-	RepositoryUrl = "https://github.com/shakahl/graphql-typedef-go"
+	RepositoryUrl = "https://github.com/shakahl/gqlassist"
 
 	// ModuleName is the name if the main Go module
-	ModuleName = "github.com/shakahl/graphql-typedef-go"
+	ModuleName = "github.com/shakahl/gqlassist"
 
 	// ProjectID is the project identifier
 	ProjectID = "graphql-typedef"
 
 	// ProjectName is the project repository name
-	ProjectName = "graphql-typedef-go"
+	ProjectName = "gqlassist"
 
 	// ProjectTitle is the project's human-readable name
-	ProjectTitle = "Golang GraphQL type definitions generator for consuming GraphQL server resources"
+	ProjectTitle = "Golang GraphQL type definitions gqlassist for consuming GraphQL server resources"
 
 	// BinaryName is the binary name
 	BinaryName = "graphql-typedef"
@@ -58,9 +58,9 @@ const (
 
 	// LongDescription is a long description
 	LongDescription = `
-Golang GraphQL type definitions generator for consuming GraphQL server resources.
+Golang GraphQL type definitions gqlassist for consuming GraphQL server resources.
 
-graphql-typedef is a CLI library for Go that helps you working with GraphQL servers. 
+graphql-typedef is a CLI library for Go that helps you working with GraphQL servers.
 `
 
 	// ConfigName is the name of config file

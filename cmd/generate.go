@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/shakahl/graphql-typedef-go/internal/config"
-	"github.com/shakahl/graphql-typedef-go/internal/generator"
+	"github.com/shakahl/gqlassist/internal/config"
+	"github.com/shakahl/gqlassist/internal/gqlassist"
 )
 
 // generateCmd represents the "generate" command
@@ -20,7 +20,7 @@ var generateCmd = &cobra.Command{
 		logger := log.New(os.Stdout, "graphql_type_def_generator", log.LstdFlags|log.LUTC)
 		cfg := config.Get()
 
-		gopts := generator.GraphQLTypeDefGeneratorOptions{
+		gopts := gqlassist.GraphQLTypeDefGeneratorConfig{
 			Endpoint:        cfg.GraphQLEndpoint,
 			AuthHeader:      cfg.GraphQLAuthHeader,
 			AuthToken:       cfg.GraphQLAuthToken,
@@ -28,7 +28,7 @@ var generateCmd = &cobra.Command{
 			OutputPackage:   cfg.OutputPackage,
 		}
 
-		gen := generator.New(gopts, logger)
+		gen := gqlassist.New(gopts, logger)
 
 		if err := gen.Generate(); err != nil {
 			logger.Fatalln(err)

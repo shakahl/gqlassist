@@ -1,4 +1,5 @@
 
+# GraphQL Query: IntrospectionQuery - Defines the query to fetch GraphQL server's schema in JSON-friendly AST
 query IntrospectionQuery {
     __schema {
         queryType { name }

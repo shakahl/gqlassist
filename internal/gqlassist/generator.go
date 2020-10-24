@@ -1,4 +1,4 @@
-package generator
+package gqlassist
 
 import (
 	"bytes"
@@ -12,15 +12,15 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/shakahl/graphql-typedef-go/internal/apiclient"
-	"github.com/shakahl/graphql-typedef-go/internal/utils"
+	"github.com/shakahl/gqlassist/internal/apiclient"
+	"github.com/shakahl/gqlassist/internal/utils"
 )
 
 func init() {
 
 }
 
-type GraphQLTypeDefGeneratorOptions struct {
+type GraphQLTypeDefGeneratorConfig struct {
 	Endpoint        string
 	AuthHeader      string
 	AuthToken       string
@@ -29,14 +29,14 @@ type GraphQLTypeDefGeneratorOptions struct {
 }
 
 type GraphQLTypeDefGenerator struct {
-	options GraphQLTypeDefGeneratorOptions
+	options GraphQLTypeDefGeneratorConfig
 	client  *apiclient.ApiClient
 	logger  *log.Logger
 }
 
-func New(options GraphQLTypeDefGeneratorOptions, logger *log.Logger) *GraphQLTypeDefGenerator {
+func New(options GraphQLTypeDefGeneratorConfig, logger *log.Logger) *GraphQLTypeDefGenerator {
 	if logger == nil {
-		logger = log.New(os.Stdout, "graphql_type_def_generator", log.LstdFlags|log.LUTC)
+		logger = log.New(os.Stdout, "gqlassist", log.LstdFlags|log.LUTC)
 	}
 	g := &GraphQLTypeDefGenerator{
 		options: options,
@@ -46,16 +46,13 @@ func New(options GraphQLTypeDefGeneratorOptions, logger *log.Logger) *GraphQLTyp
 }
 
 // getTemplates returns a template map (filename->template)
-func (g *GraphQLTypeDefGenerator) getTemplates() map[string]*template.Template {
+func (g *GraphQLTypeDefGenerator) createTemplates(params map[string]interface{}) map[string]*template.Template {
 	// Filename -> Template.
-	var params = map[string]string{
-		"pkg": g.options.OutputPackage,
-	}
 	var templates = map[string]*template.Template{
-		"gen_graphql_scalars.go":       renderGeneratorTemplate("gen_graphql_scalars.gotmpl", GeneratorTemplateScalar, params),
-		"gen_graphql_enums.go":         renderGeneratorTemplate("gen_graphql_enums.gotmpl", GeneratorTemplateEnum, params),
-		"gen_graphql_input_objects.go": renderGeneratorTemplate("gen_graphql_input_objects.gotmpl", GeneratorTemplateInputObjects, params),
-		"gen_graphql_objects.go":       renderGeneratorTemplate("gen_graphql_objects.gotmpl", GeneratorTemplateObjects, params),
+		"gen_graphql_scalars.go":       renderGeneratorTemplate("graphql_scalars.gotmpl", GeneratorTemplateScalar),
+		"gen_graphql_enums.go":         renderGeneratorTemplate("graphql_enums.gotmpl", GeneratorTemplateEnum),
+		"gen_graphql_input_objects.go": renderGeneratorTemplate("graphql_input_objects.gotmpl", GeneratorTemplateInputObjects),
+		"gen_graphql_objects.go":       renderGeneratorTemplate("graphql_objects.gotmpl", GeneratorTemplateObjects),
 	}
 	return templates
 }
@@ -132,12 +129,24 @@ func (g *GraphQLTypeDefGenerator) Generate() error {
 		return err
 	}
 
-	for filename, t := range g.getTemplates() {
+	params := make(map[string]interface{})
+	params["FileHeader"] = FileHeaderText
+	params["Schema"] = schema
+	params["PackageName"] = g.options.OutputPackage
+	params["FeatureFlags"] = map[string]interface{}{
+		"UseIntegerEnums": true,
+	}
+	// use_integer_enums
+
+	templates := g.createTemplates(params)
+
+	for filename, t := range templates {
 		outputFile := g.getOutputFilePath(filename)
 		g.logger.Printf("Processing template: %s\n", filename)
 		var buf bytes.Buffer
-		err := t.Execute(&buf, schema)
+		err := t.Execute(&buf, params)
 		if err != nil {
+			g.logger.Printf("ERR: %+v\n", err)
 			return err
 		}
 		out, err := format.Source(buf.Bytes())

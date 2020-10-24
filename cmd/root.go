@@ -9,9 +9,9 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/shakahl/graphql-typedef-go/internal/config"
-	"github.com/shakahl/graphql-typedef-go/internal/utils"
-	"github.com/shakahl/graphql-typedef-go/meta"
+	"github.com/shakahl/gqlassist/internal/config"
+	"github.com/shakahl/gqlassist/internal/utils"
+	"github.com/shakahl/gqlassist/meta"
 )
 
 var cfgFile string

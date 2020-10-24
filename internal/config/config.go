@@ -14,12 +14,12 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/shakahl/graphql-typedef-go/internal/utils"
-	"github.com/shakahl/graphql-typedef-go/meta"
+	"github.com/shakahl/gqlassist/internal/utils"
+	"github.com/shakahl/gqlassist/meta"
 )
 
 const (
-	EnvPrefix = "GRAPHQL_TYPEDEF"
+	EnvPrefix = "GQLASSIST"
 )
 
 var (
