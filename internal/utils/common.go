@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -29,11 +28,11 @@ func GetValue(v interface{}, def string) string {
 }
 
 // Must halts the application if error is not nil
-func Must(err error) {
-	if err != nil {
-		log.Fatalf("ERROR : %s\n", err)
-	}
-}
+// func Must(err error) {
+// 	if err != nil {
+// 		log.Fatalf("ERROR : %s\n", err)
+// 	}
+// }
 
 // Die halts the execution with a message
 func Die(msg string) {

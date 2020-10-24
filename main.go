@@ -1,4 +1,4 @@
-//go:generate statik -dest=internal -p statikdata -src=assets/templates/ -include=*.gotmpl
+//go:generate statik -f -dest=internal -p statikdata -src=assets/templates/ -include=*.gotmpl
 
 package main
 

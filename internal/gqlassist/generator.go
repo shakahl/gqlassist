@@ -13,6 +13,7 @@ import (
 	"text/template"
 
 	"github.com/shakahl/gqlassist/internal/apiclient"
+	"github.com/shakahl/gqlassist/internal/statikdata"
 	"github.com/shakahl/gqlassist/internal/utils"
 )
 
@@ -29,9 +30,10 @@ type GraphQLTypeDefGeneratorConfig struct {
 }
 
 type GraphQLTypeDefGenerator struct {
-	options GraphQLTypeDefGeneratorConfig
-	client  *apiclient.ApiClient
-	logger  *log.Logger
+	options   GraphQLTypeDefGeneratorConfig
+	client    *apiclient.ApiClient
+	logger    *log.Logger
+	templates map[string]*template.Template
 }
 
 func New(options GraphQLTypeDefGeneratorConfig, logger *log.Logger) *GraphQLTypeDefGenerator {
@@ -46,15 +48,26 @@ func New(options GraphQLTypeDefGeneratorConfig, logger *log.Logger) *GraphQLType
 }
 
 // getTemplates returns a template map (filename->template)
-func (g *GraphQLTypeDefGenerator) createTemplates(params map[string]interface{}) map[string]*template.Template {
-	// Filename -> Template.
-	var templates = map[string]*template.Template{
-		"gen_graphql_scalars.go":       renderGeneratorTemplate("graphql_scalars.gotmpl", GeneratorTemplateScalar),
-		"gen_graphql_enums.go":         renderGeneratorTemplate("graphql_enums.gotmpl", GeneratorTemplateEnum),
-		"gen_graphql_input_objects.go": renderGeneratorTemplate("graphql_input_objects.gotmpl", GeneratorTemplateInputObjects),
-		"gen_graphql_objects.go":       renderGeneratorTemplate("graphql_objects.gotmpl", GeneratorTemplateObjects),
+func (g *GraphQLTypeDefGenerator) GetTemplates(params map[string]interface{}) map[string]*template.Template {
+	if g.templates != nil {
+		return g.templates
 	}
-	return templates
+
+	statikTemplates := map[string]string{
+		"gen_graphql_enums.go":         "/graphql_enums.gotmpl",
+		"gen_graphql_scalars.go":       "/graphql_scalars.gotmpl",
+		"gen_graphql_input_objects.go": "/graphql_input_objects.gotmpl",
+		"gen_graphql_objects.go":       "/graphql_objects.gotmpl",
+	}
+
+	g.templates = make(map[string]*template.Template)
+
+	for name, path := range statikTemplates {
+		content := statikdata.MustReadFileString(path)
+		g.templates[name] = renderGeneratorTemplate(name, content)
+	}
+
+	return g.templates
 }
 
 func (g *GraphQLTypeDefGenerator) getWorkingDirectory() string {
@@ -95,8 +108,8 @@ func (g *GraphQLTypeDefGenerator) fetchGraphQLSchema() (string, error) {
 	return string(result.GetBody()), nil
 }
 
-func (g *GraphQLTypeDefGenerator) decodeStringToInterface(schema string) (interface{}, error) {
-	var target interface{}
+func (g *GraphQLTypeDefGenerator) decodeStringToInterface(schema string) (map[string]interface{}, error) {
+	var target map[string]interface{}
 	s := strings.NewReader(schema)
 	if err := json.NewDecoder(s).Decode(&target); err != nil {
 		return nil, err
@@ -138,7 +151,7 @@ func (g *GraphQLTypeDefGenerator) Generate() error {
 	}
 	// use_integer_enums
 
-	templates := g.createTemplates(params)
+	templates := g.GetTemplates(params)
 
 	for filename, t := range templates {
 		outputFile := g.getOutputFilePath(filename)

@@ -20,7 +20,7 @@ type (
 		Debug             bool   `json:"debug" envconfig:"debug" default:"false"`
 		OutputDirectory   string `json:"output_directory" envconfig:"output_directory" default:"internal/graphqltypes" split_words:"true"`
 		OutputPackage     string `json:"output_package" envconfig:"output_package" required:"true" split_words:"true" default:"graphqltypes"`
-		GraphQLEndpoint   string `json:"graphql_endpoint" envconfig:"graphql_endpoint" required:"true" split_words:"true"`
+		GraphQLEndpoint   string `json:"graphql_endpoint" envconfig:"graphql_endpoint" required:"true" split_words:"false"`
 		GraphQLAuthHeader string `json:"graphql_auth_header" envconfig:"graphql_auth_header" required:"true" split_words:"true" default:"Authorization"`
 		GraphQLAuthToken  string `json:"graphql_auth_token" envconfig:"graphql_auth_token" split_words:"true"`
 	}

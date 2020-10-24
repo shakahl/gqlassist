@@ -15,8 +15,8 @@ import (
 type Object interface{}
 
 type GQLMeta struct {
-// GQLTypeName @graphql="__typename" Is a meta field containing the GraphQL type name
-GQLTypeName *string ` + "`" + `json:"__typename,omitempty"` + "`" + `
+    // GQLTypeName @graphql="__typename" Is a meta field containing the GraphQL type name
+    GQLTypeName *string `json:"__typename,omitempty"`
 }
 
 var (
@@ -39,16 +39,16 @@ ReverseTypeMapObjects = map[string]string{
 
 {{- define "object" -}}
     // {{ .name | identifier }} @graphql="{{ .name }}" {{ if .description }}{{ .description | clean | formatDescription }}{{ end }}
-    type {{.name | identifier }} struct {{- "{" }}
+    type {{.name | identifier }} struct {
     GQLMeta
     {{- range .fields -}}
         {{- if eq .type.kind "NON_NULL" }}
             // {{ .name | identifier }} @graphql="{{ .name }}" {{ if .description }}{{ .description | clean | formatDescription }}{{ end }} (Required.)
-            {{ .name | identifier }} {{ .type | type }} ` + "`" + `json:"{{ .name }}" graphql:"!{{ .name }}"` + "`" + `
+            {{ .name | identifier }} {{ .type | type }} `json:"{{ .name }}" graphql:"!{{ .name }}"`
         {{- end -}}
         {{- if ne .type.kind "NON_NULL" }}
             // {{ .name | identifier }} @graphql="{{ .name }}" {{ if .description }}{{ .description | clean | formatDescription }}{{ end }} (Optional.)
-            {{ .name | identifier }} {{ .type | type }} ` + "`" + `json:"{{ .name }},omitempty" graphql:"{{ .name }}"` + "`" + `
+            {{ .name | identifier }} {{ .type | type }} `json:"{{ .name }},omitempty" graphql:"{{ .name }}"`
         {{- end -}}
     {{- end -}}
     }
