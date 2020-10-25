@@ -42,7 +42,7 @@ const (
 	ModuleName = "github.com/shakahl/gqlassist"
 
 	// ProjectID is the project identifier
-	ProjectID = "graphql-typedef"
+	ProjectID = "gqlassist"
 
 	// ProjectName is the project repository name
 	ProjectName = "gqlassist"
@@ -51,16 +51,15 @@ const (
 	ProjectTitle = "Golang GraphQL type definitions gqlassist for consuming GraphQL server resources"
 
 	// BinaryName is the binary name
-	BinaryName = "graphql-typedef"
+	BinaryName = "gqlassist"
 
 	// ShortDescription is a short description
 	ShortDescription = ProjectTitle
 
 	// LongDescription is a long description
 	LongDescription = `
-Golang GraphQL type definitions gqlassist for consuming GraphQL server resources.
-
-graphql-typedef is a CLI library for Go that helps you working with GraphQL servers.
+GQLAssist is a CLI tool for Go that helps you working with GraphQL servers by
+generating struct definitions for remote GraphQL schema.
 `
 
 	// ConfigName is the name of config file
